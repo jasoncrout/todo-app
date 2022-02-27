@@ -5,14 +5,18 @@ import { Container, Card, Row, Col } from "react-bootstrap";
 import ToDo from "./ToDo";
 
 function Content({ setUsername }) {
+    console.log(window.top.location.origin);
 
     const [isLoggedIn, setLogIn] = useState(false);
 
+    const [jwtTokenId, setJwtTokenId] = useState("");
+
     const successGoogle = (response) => {
         setLogIn(true);
-        console.log("Logged in Successfully!");
         setUsername(response.Du.tf);
+        setJwtTokenId(response.tokenId);
 
+        console.log("Logged in Successfully!");
         console.log(response);
     }
 
@@ -24,7 +28,7 @@ function Content({ setUsername }) {
         <Container>
             <Row>
                 {isLoggedIn ?
-                    <ToDo /> :
+                    <ToDo token={jwtTokenId}/> :
                     <Col>
                         <Card border="dark" bg="white">
                             <Card.Body>
@@ -36,9 +40,11 @@ function Content({ setUsername }) {
                                     clientId="329905037749-dojksmfa7c45l2lvacouutcj58jm134e.apps.googleusercontent.com"
                                     buttonText="Login with Google"
                                     onSuccess={successGoogle}
-                                    isSignedIn={false}
+                                    isSignedIn={true}
                                     onFailure={failureGoogle}
                                     cookiePolicy={'single_host_origin'}
+                                    uxMode="redirect"
+                                    redirectUri={window.top.location.origin}
                                 />
                             </Card.Body>
                         </Card>
